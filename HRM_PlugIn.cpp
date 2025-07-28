@@ -204,25 +204,41 @@ void HRM_PlugIn::PluginStart()
 
 
 
+
 void HRM_PlugIn::PluginStop()
 {
 
-	
-	if (m_initialized == false) return;
+    if (m_initialized == false) return;
 
-	
+    XPLMUnregisterFlightLoopCallback(WrapFlightLoopCallback, 0);
 
-	XPLMUnregisterFlightLoopCallback(WrapFlightLoopCallback, 0);
+    XPLMDestroyMenu(m_PluginMenuID);
 
-	XPLMDestroyMenu(m_PluginMenuID);
+    SaveConfig();
 
-	SaveConfig();
+    // Remove any remaining mission objects and free memory
+    MissionReset();
 
+    auto delete_missions = [](std::vector<HRM_Mission*> &vec)
+    {
+        for (auto p_mission : vec)
+        {
+            if (p_mission)
+                delete p_mission;
+        }
+        vec.clear();
+    };
 
-	
+    delete_missions(m_street_missions);
+    delete_missions(m_urban_missions);
+    delete_missions(m_sar_missions);
+    delete_missions(m_sling_missions);
+    delete_missions(m_street_fire_missions);
+    delete_missions(m_urban_fire_missions);
+    delete_missions(m_sar_fire_missions);
+    delete_missions(m_sling_fire_missions);
 
 }
-
 void HRM_PlugIn::PluginEnable()
 {
 	m_plugin_enabled = 1;
