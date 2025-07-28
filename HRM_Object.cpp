@@ -314,6 +314,9 @@ HRM_Object::HRM_Object()
 
 HRM_Object::~HRM_Object()
 {
-	HRMDebugString("Destroying Probe");
-	if (!m_probe) XPLMDestroyProbe(m_probe);
+        HRMDebugString("Destroying Probe");
+        if (m_probe) {
+                XPLMDestroyProbe(m_probe);
+                m_probe = nullptr;
+        }
 }
