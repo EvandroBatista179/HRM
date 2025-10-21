@@ -26,7 +26,15 @@ HRM_Mission::HRM_Mission() :
 
 HRM_Mission::~HRM_Mission()
 {
-	//for (auto p_obj : m_object_vector) delete p_obj;
+        for (auto p_obj : m_object_vector)
+        {
+                if (p_obj != NULL)
+                {
+                        p_obj->DestroyInstance();
+                        delete p_obj;
+                }
+        }
+        m_object_vector.clear();
 }
 
 void HRM_Mission::SetPosition(double zero_latitude, double zero_longitude, double zero_heading)
